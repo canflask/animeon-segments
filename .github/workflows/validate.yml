@@ -1,0 +1,27 @@
+name: Проверка таймкодов
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate segments
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить файлы
+        uses: actions/checkout@v4
+
+      - name: Подключить Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Проверить базу
+        run: npm run validate
