@@ -2,19 +2,18 @@
   "schemaVersion": 1,
   "updatedAt": "2026-09-08T00:00:00Z",
   "segments": [
-{
-  "id": "c3d4cf21-3c47-4d3d-ac4b-862dc942807a",
-  "animeId": 37521,
-  "animeSlug": "saga-o-vinlande-37521",
-  "episode": 1,
-  "translation": "*",
-  "category": "opening",
-  "segment": [
-    258.46,
-    347.18
-  ],
-  "status": "approved"
-}
+    {
+      "id": "c3d4cf21-3c47-4d3d-ac4b-862dc942807a",
+      "animeId": 37521,
+      "animeSlug": "saga-o-vinlande-37521",
+      "episode": 1,
+      "translation": "*",
+      "category": "opening",
+      "segment": [
+        258.46,
+        347.18
+      ],
+      "status": "approved"
+    }
   ]
 }
-
