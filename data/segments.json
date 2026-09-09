@@ -1,35 +1,45 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-08T00:00:00Z",
+  "updatedAt": "2026-09-09T14:29:15.146Z",
   "segments": [
     {
-  "id": "9410800d-31ee-4cfd-8cf7-9cf226679067",
-  "animeId": 1575,
-  "animeSlug": "kod-gias-vosstavshiy-lelush-1575",
-  "episode": 1,
-  "translation": "*",
-  "category": "opening",
-  "segment": [
-    102.44,
-    191.94
-  ],
-  "status": "approved"
-},
+      "id": "44ea45d9-e636-4ca3-8508-34ffa357ecb6",
+      "animeId": 1575,
+      "animeSlug": "kod-gias-vosstavshiy-lelush-1575",
+      "episode": 1,
+      "translation": "*",
+      "category": "ending",
+      "segment": [
+        1357.77,
+        1447.45
+      ],
+      "status": "approved"
+    },
     {
-  "id": "44ea45d9-e636-4ca3-8508-34ffa357ecb6",
-  "animeId": 1575,
-  "animeSlug": "kod-gias-vosstavshiy-lelush-1575",
-  "episode": 1,
-  "translation": "*",
-  "category": "ending",
-  "segment": [
-    1357.77,
-    1447.45
-  ],
-  "status": "approved"
-}
-
-
-    
+      "id": "9410800d-31ee-4cfd-8cf7-9cf226679067",
+      "animeId": 1575,
+      "animeSlug": "kod-gias-vosstavshiy-lelush-1575",
+      "episode": 1,
+      "translation": "*",
+      "category": "opening",
+      "segment": [
+        102.44,
+        191.94
+      ],
+      "status": "approved"
+    },
+    {
+      "id": "c3d4cf21-3c47-4d3d-ac4b-862dc942807a",
+      "animeId": 37521,
+      "animeSlug": "saga-o-vinlande-37521",
+      "episode": 1,
+      "translation": "*",
+      "category": "opening",
+      "segment": [
+        258.46,
+        347.18
+      ],
+      "status": "approved"
+    }
   ]
 }
