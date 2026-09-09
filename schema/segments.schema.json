@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/REPLACE_OWNER/animeon-segments/schema/segments.schema.json",
+  "$id": "https://github.com/canflask/animeon-segments/schema/segments.schema.json",
   "title": "AnimeOn Community Skip database",
   "type": "object",
   "additionalProperties": false,
@@ -71,6 +71,10 @@
             ],
             "minItems": 2,
             "maxItems": 2
+          },
+          "submittedBy": {
+            "type": "string",
+            "pattern": "^aocs-[0-9a-fA-F-]{36}$"
           },
           "status": {
             "const": "approved"

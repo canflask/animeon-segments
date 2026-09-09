@@ -42,6 +42,7 @@ database.segments.forEach((item, index) => {
     'translation',
     'category',
     'segment',
+    'submittedBy',
     'status'
   ]);
   for (const key of Object.keys(item)) {
@@ -88,6 +89,10 @@ database.segments.forEach((item, index) => {
   }
   if (item.status !== 'approved') {
     errors.push(path + '.status: в основной базе допустим только approved.');
+  }
+  if (item.submittedBy !== undefined
+    && (typeof item.submittedBy !== 'string' || !/^aocs-[0-9a-f-]{36}$/i.test(item.submittedBy))) {
+    errors.push(path + '.submittedBy: неверный анонимный AOCS ID.');
   }
 
   const slot = [item.animeId, item.episode, item.translation, item.category].join('|');
