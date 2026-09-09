@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-09T18:52:45.777Z",
+  "updatedAt": "2026-09-09T19:05:51.872Z",
   "segments": [
     {
       "id": "adce9d75-eec6-4e35-b871-c860f57b2f9e",
@@ -54,6 +54,34 @@
       "segment": [
         39.12,
         129.17
+      ],
+      "submittedBy": "canflask",
+      "status": "approved"
+    },
+    {
+      "id": "e4b288ba-81bb-45d8-9062-b4dd5fba3741",
+      "animeId": 1575,
+      "animeSlug": "kod-gias-vosstavshiy-lelush-1575",
+      "episode": 13,
+      "translation": "*",
+      "category": "ending",
+      "segment": [
+        1337.59,
+        1449
+      ],
+      "submittedBy": "canflask",
+      "status": "approved"
+    },
+    {
+      "id": "db64f296-b695-487f-9553-f62e7ab55d45",
+      "animeId": 1575,
+      "animeSlug": "kod-gias-vosstavshiy-lelush-1575",
+      "episode": 13,
+      "translation": "*",
+      "category": "opening",
+      "segment": [
+        50.22,
+        140.93
       ],
       "submittedBy": "canflask",
       "status": "approved"
