@@ -29,26 +29,39 @@ jobs:
         with:
           node-version: 22
 
-      - name: Импортировать JSON из Issue
+      - name: Импортировать, проверить и сохранить базу
         id: import
-        run: node scripts/import-issue.mjs
-
-      - name: Проверить всю базу
-        run: npm run validate
-
-      - name: Сохранить базу
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           git config user.name "animeon-skip-bot"
           git config user.email "animeon-skip-bot@users.noreply.github.com"
-          git add data/segments.json
-          if git diff --cached --quiet; then
-            echo "Изменений нет"
-          else
+
+          for attempt in 1 2 3 4 5; do
+            echo "Попытка ${attempt}: получаю свежую ветку main"
+            git fetch origin main
+            git checkout -B main origin/main
+
+            node scripts/import-issue.mjs
+            npm run validate
+            git add data/segments.json
+
+            if git diff --cached --quiet; then
+              echo "Изменений нет"
+              exit 0
+            fi
+
             git commit -m "segments: approve issue #${ISSUE_NUMBER}"
-            git push
-          fi
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
+            echo "Ветка main изменилась во время обработки. Повторяю на свежей версии."
+            sleep $((attempt * 2))
+          done
+
+          echo "Не удалось сохранить базу после 5 попыток" >&2
+          exit 1
 
       - name: Закрыть обработанное Issue
         env:
