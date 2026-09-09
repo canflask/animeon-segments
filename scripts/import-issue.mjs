@@ -7,9 +7,8 @@ const event = JSON.parse(await readFile(eventPath, 'utf8'));
 const issue = event.issue;
 if (!issue || typeof issue.body !== 'string') fail('В событии нет текста Issue.');
 
-const submitted = parseSubmittedJson(issue.body);
-const item = normalizeSubmittedItem(submitted);
-validateItem(item);
+const items = normalizeSubmittedItems(parseSubmittedJson(issue.body));
+items.forEach(validateItem);
 
 const databaseUrl = new URL('../data/segments.json', import.meta.url);
 const database = JSON.parse(await readFile(databaseUrl, 'utf8'));
@@ -17,21 +16,24 @@ if (!database || database.schemaVersion !== 1 || !Array.isArray(database.segment
   fail('Текущий data/segments.json имеет неверный формат.');
 }
 
-const sameId = database.segments.findIndex(entry => entry.id === item.id);
-const sameSlot = database.segments.findIndex(entry =>
-  Number(entry.animeId) === item.animeId
-  && Number(entry.episode) === item.episode
-  && String(entry.translation) === item.translation
-  && String(entry.category) === item.category
-);
-const replaceIndex = sameId >= 0 ? sameId : sameSlot;
-let action = 'added';
-
-if (replaceIndex >= 0) {
-  database.segments[replaceIndex] = item;
-  action = 'updated';
-} else {
-  database.segments.push(item);
+let added = 0;
+let updated = 0;
+for (const item of items) {
+  const sameId = database.segments.findIndex(entry => entry.id === item.id);
+  const sameSlot = database.segments.findIndex(entry =>
+    Number(entry.animeId) === item.animeId
+    && Number(entry.episode) === item.episode
+    && String(entry.translation) === item.translation
+    && String(entry.category) === item.category
+  );
+  const replaceIndex = sameId >= 0 ? sameId : sameSlot;
+  if (replaceIndex >= 0) {
+    database.segments[replaceIndex] = item;
+    updated += 1;
+  } else {
+    database.segments.push(item);
+    added += 1;
+  }
 }
 
 database.segments.sort((left, right) =>
@@ -45,11 +47,14 @@ database.updatedAt = new Date().toISOString();
 await writeFile(databaseUrl, JSON.stringify(database, null, 2) + '\n', 'utf8');
 
 if (process.env.GITHUB_OUTPUT) {
+  const action = added && updated
+    ? 'добавлено ' + added + ', обновлено ' + updated
+    : added ? 'добавлено ' + added : 'обновлено ' + updated;
   await appendFile(process.env.GITHUB_OUTPUT, 'action=' + action + '\n', 'utf8');
-  await appendFile(process.env.GITHUB_OUTPUT, 'segment_id=' + item.id + '\n', 'utf8');
+  await appendFile(process.env.GITHUB_OUTPUT, 'segment_id=' + items.map(item => item.id).join(',') + '\n', 'utf8');
 }
 
-console.log((action === 'added' ? 'Добавлена' : 'Обновлена') + ' метка ' + item.id);
+console.log('Обработано меток: ' + items.length + ' · добавлено: ' + added + ' · обновлено: ' + updated);
 
 function parseSubmittedJson(body) {
   const fenced = body.match(/(?:~~~|\x60{3})\s*json\s*\r?\n([\s\S]*?)(?:~~~|\x60{3})/i);
@@ -73,10 +78,33 @@ function parseSubmittedJson(body) {
   fail('В Issue не найден JSON-объект.');
 }
 
-function normalizeSubmittedItem(value) {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) {
-    fail('Предложение должно содержать один JSON-объект.');
+function normalizeSubmittedItems(value) {
+  let values = [];
+  if (Array.isArray(value)) {
+    values = value;
+  } else if (value && typeof value === 'object' && Array.isArray(value.segments)) {
+    values = value.segments.map(segment => ({ ...value, ...segment, segments: undefined }));
+  } else if (value && typeof value === 'object') {
+    values = [value];
   }
+  if (!values.length || values.length > 10) {
+    fail('Предложение должно содержать от 1 до 10 таймкодов.');
+  }
+  const items = values.map(normalizeSubmittedItem);
+  const pair = items.length === 2
+    && items.some(item => item.category === 'opening')
+    && items.some(item => item.category === 'ending');
+  if (items.length > 1 && !pair) fail('Общая заявка должна содержать один opening и один ending.');
+  if (items.some(item => item.animeId !== items[0].animeId
+    || item.episode !== items[0].episode
+    || item.translation !== items[0].translation)) {
+    fail('Все таймкоды одной заявки должны относиться к одной серии и озвучке.');
+  }
+  return items;
+}
+
+function normalizeSubmittedItem(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) fail('Таймкод должен быть JSON-объектом.');
   return {
     id: String(value.id || '').trim(),
     animeId: Number(value.animeId),
@@ -117,8 +145,8 @@ function validateItem(item) {
   if (item.segment[0] < 0 || item.segment[1] <= item.segment[0] || item.segment[1] > 28800) {
     fail('Указан неверный диапазон времени.');
   }
-  if (item.submittedBy && !/^aocs-[0-9a-f-]{36}$/i.test(item.submittedBy)) {
-    fail('submittedBy должен содержать анонимный AOCS ID.');
+  if (item.submittedBy && !/^[\p{L}\p{N}_.-]{1,64}$/u.test(item.submittedBy)) {
+    fail('submittedBy должен содержать ник AnimeOn без @.');
   }
 }
 

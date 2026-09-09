@@ -91,8 +91,8 @@ database.segments.forEach((item, index) => {
     errors.push(path + '.status: в основной базе допустим только approved.');
   }
   if (item.submittedBy !== undefined
-    && (typeof item.submittedBy !== 'string' || !/^aocs-[0-9a-f-]{36}$/i.test(item.submittedBy))) {
-    errors.push(path + '.submittedBy: неверный анонимный AOCS ID.');
+    && (typeof item.submittedBy !== 'string' || !/^[\p{L}\p{N}_.-]{1,64}$/u.test(item.submittedBy))) {
+    errors.push(path + '.submittedBy: требуется ник AnimeOn без @.');
   }
 
   const slot = [item.animeId, item.episode, item.translation, item.category].join('|');
