@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-09T14:49:39.187Z",
+  "updatedAt": "2026-09-09T14:51:02.027Z",
   "segments": [
     {
       "id": "44ea45d9-e636-4ca3-8508-34ffa357ecb6",
@@ -38,6 +38,20 @@
       "segment": [
         1337.99,
         1451
+      ],
+      "submittedBy": "aocs-812437aa-2498-43d8-980d-2ae83592b742",
+      "status": "approved"
+    },
+    {
+      "id": "02c7d8c8-0f51-4d99-a6a1-0137a60a88aa",
+      "animeId": 1575,
+      "animeSlug": "kod-gias-vosstavshiy-lelush-1575",
+      "episode": 8,
+      "translation": "*",
+      "category": "opening",
+      "segment": [
+        41.52,
+        129.59
       ],
       "submittedBy": "aocs-812437aa-2498-43d8-980d-2ae83592b742",
       "status": "approved"
